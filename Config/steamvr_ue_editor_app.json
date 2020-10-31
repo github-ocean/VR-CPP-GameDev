@@ -5,7 +5,7 @@
 			"app_key": "application.generated.ue.vrcppgamedev-14469661.ue4editor.exe",
 			"launch_type": "url",
 			"url": "steam://launch/",
-			"action_manifest_path": "D:/Sagar/Unreal_Engine/Project/VRCPP_GameDev/VRCPPGameDev/Config/SteamVRBindings/steamvr_manifest.json",
+			"action_manifest_path": "D:/Sagar/Unreal_Engine/Project/VRCPPGameDev/Config/SteamVRBindings/steamvr_manifest.json",
 			"strings":
 			{
 				"en_us":
