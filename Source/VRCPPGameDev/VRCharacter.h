@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -36,9 +37,17 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class USceneComponent* VRRoot;
 
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* DestinationMarker;
+
+	UPROPERTY(EditAnywhere)
+	float MaxTeleportDistance = 1000;
+
 public:
 
 	void MoveForward(float Throttle);
 	void MoveRight(float Throttle);
+
+	void UpdateDestinationMarker();
 
 };
