@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SceneComponent.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -31,6 +32,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere)
+	class USceneComponent* VRRoot;
 
 public:
 
