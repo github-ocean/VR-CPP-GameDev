@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "TimerManager.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -43,6 +44,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxTeleportDistance = 1000;
 
+	UPROPERTY(EditAnywhere)
+	float TeleportFadeTime = 1;
+
 public:
 
 	void MoveForward(float Throttle);
@@ -50,4 +54,6 @@ public:
 
 	void UpdateDestinationMarker();
 
+	void BegineTeleport();
+	void FinishTeleport();
 };

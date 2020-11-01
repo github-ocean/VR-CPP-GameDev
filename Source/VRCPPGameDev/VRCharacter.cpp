@@ -64,7 +64,7 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Right"), this, &AVRCharacter::MoveRight);
-	
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AVRCharacter::BegineTeleport);
 
 }
 
@@ -76,4 +76,27 @@ void AVRCharacter::MoveForward(float Throttle)
 void AVRCharacter::MoveRight(float Throttle)
 {
 	AddMovementInput(Camera->GetRightVector() * Throttle);
+}
+
+void AVRCharacter::BegineTeleport() 
+{
+	APlayerController* pc = Cast<APlayerController>(GetController());
+	if (pc != nullptr)
+	{
+		pc->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black);
+	}
+
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime);
+}
+
+void AVRCharacter::FinishTeleport()
+{
+	SetActorLocation(DestinationMarker->GetComponentLocation());
+
+	APlayerController* pc = Cast<APlayerController>(GetController());
+	if (pc != nullptr)
+	{
+		pc->PlayerCameraManager->StartCameraFade(1, 0, TeleportFadeTime, FLinearColor::Black);
+	}
 }
