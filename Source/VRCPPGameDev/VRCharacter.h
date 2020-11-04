@@ -62,6 +62,9 @@ private:
 	UPROPERTY()
 	class UMaterialInstanceDynamic* BlinkerMaterialInstance;
 
+	UPROPERTY(EditAnywhere)
+	class UCurveFloat* RadiusVsVelocity;
+
 public:
 
 	void MoveForward(float Throttle);
@@ -69,9 +72,11 @@ public:
 
 	bool FindTeleportDestination(FVector& OutLocation);
 	void UpdateDestinationMarker();
+	void UpdateBlinker();
 
 	void BegineTeleport();
 	void FinishTeleport();
 
 	void StartFade(float FromAlpha, float ToAlpha);
+
 };
