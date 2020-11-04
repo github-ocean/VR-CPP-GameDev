@@ -40,20 +40,34 @@ void AVRCharacter::Tick(float DeltaTime)
 	UpdateDestinationMarker();
 }
 
-void AVRCharacter::UpdateDestinationMarker()
+bool AVRCharacter::FindTeleportDestination(FVector& OutLocation)
 {
 	FVector Start = Camera->GetComponentLocation();
 	FVector End = Start + Camera->GetForwardVector() * MaxTeleportDistance;
 	FHitResult HitResult;
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
-	
+	if (!bHit) return false;
+
 	FNavLocation NavLocation;
 	bool bOnNavMesh = UNavigationSystemV1::GetCurrent(GetWorld())->ProjectPointToNavigation(HitResult.Location, NavLocation, TeleportProjectionExtent);
+	if (!bOnNavMesh) return false;
 
-	if (bOnNavMesh && bHit)
+	OutLocation = NavLocation.Location;
+
+	return true;
+}
+
+void AVRCharacter::UpdateDestinationMarker()
+{
+
+	FVector Location;
+	bool bHasDestination = FindTeleportDestination(Location);
+	
+
+	if (bHasDestination)
 	{
 		DestinationMarker->SetVisibility(true);
-		DestinationMarker->SetWorldLocation(NavLocation.Location);
+		DestinationMarker->SetWorldLocation(Location);
 	}
 	else
 	{
@@ -83,11 +97,7 @@ void AVRCharacter::MoveRight(float Throttle)
 
 void AVRCharacter::BegineTeleport() 
 {
-	APlayerController* pc = Cast<APlayerController>(GetController());
-	if (pc != nullptr)
-	{
-		pc->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black);
-	}
+	StartFade(0, 1);
 
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime);
@@ -97,9 +107,14 @@ void AVRCharacter::FinishTeleport()
 {
 	SetActorLocation(DestinationMarker->GetComponentLocation());
 
+	StartFade(1, 0);
+}
+
+void AVRCharacter::StartFade(float FromAlpha, float ToAlpha)
+{
 	APlayerController* pc = Cast<APlayerController>(GetController());
 	if (pc != nullptr)
 	{
-		pc->PlayerCameraManager->StartCameraFade(1, 0, TeleportFadeTime, FLinearColor::Black);
+		pc->PlayerCameraManager->StartCameraFade(FromAlpha, ToAlpha, TeleportFadeTime, FLinearColor::Black);
 	}
 }

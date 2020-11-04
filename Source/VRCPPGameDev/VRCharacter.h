@@ -56,8 +56,11 @@ public:
 	void MoveForward(float Throttle);
 	void MoveRight(float Throttle);
 
+	bool FindTeleportDestination(FVector& OutLocation);
 	void UpdateDestinationMarker();
 
 	void BegineTeleport();
 	void FinishTeleport();
+
+	void StartFade(float FromAlpha, float ToAlpha);
 };
