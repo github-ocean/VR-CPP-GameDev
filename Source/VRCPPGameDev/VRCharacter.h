@@ -73,6 +73,7 @@ public:
 	bool FindTeleportDestination(FVector& OutLocation);
 	void UpdateDestinationMarker();
 	void UpdateBlinker();
+	FVector2D GetBlinkerCenter();
 
 	void BegineTeleport();
 	void FinishTeleport();
