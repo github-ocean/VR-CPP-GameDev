@@ -8,6 +8,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
+#include "NavigationSystem.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -46,6 +47,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float TeleportFadeTime = 1;
+
+	UPROPERTY(EditAnywhere)
+	FVector TeleportProjectionExtent = FVector(100, 100, 100);
 
 public:
 

@@ -47,10 +47,13 @@ void AVRCharacter::UpdateDestinationMarker()
 	FHitResult HitResult;
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 	
-	if (bHit)
+	FNavLocation NavLocation;
+	bool bOnNavMesh = UNavigationSystemV1::GetCurrent(GetWorld())->ProjectPointToNavigation(HitResult.Location, NavLocation, TeleportProjectionExtent);
+
+	if (bOnNavMesh && bHit)
 	{
 		DestinationMarker->SetVisibility(true);
-		DestinationMarker->SetWorldLocation(HitResult.Location);
+		DestinationMarker->SetWorldLocation(NavLocation.Location);
 	}
 	else
 	{
