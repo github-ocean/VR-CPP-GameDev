@@ -1,6 +1,5 @@
  // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "VRCharacter.h"
 
 // Sets default values
@@ -20,6 +19,16 @@ AVRCharacter::AVRCharacter()
 
 	PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
 	PostProcessComponent->SetupAttachment(GetRootComponent());
+
+	LeftController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("LeftController"));
+	LeftController->SetupAttachment(VRRoot);
+	LeftController->SetTrackingSource(EControllerHand::Left);
+	LeftController->bDisplayDeviceModel = true;
+
+	RightController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("RightController"));
+	RightController->SetupAttachment(VRRoot);
+	RightController->SetTrackingSource(EControllerHand::Right);
+	RightController->bDisplayDeviceModel = true;
 }
 
 // Called when the game starts or when spawned
@@ -52,8 +61,10 @@ void AVRCharacter::Tick(float DeltaTime)
 
 bool AVRCharacter::FindTeleportDestination(FVector& OutLocation)
 {
-	FVector Start = Camera->GetComponentLocation();
-	FVector End = Start + Camera->GetForwardVector() * MaxTeleportDistance;
+	FVector Start = RightController->GetComponentLocation();
+	FVector Look = RightController->GetForwardVector();
+	Look = Look.RotateAngleAxis(30, RightController->GetRightVector());
+	FVector End = Start + Look * MaxTeleportDistance;
 	FHitResult HitResult;
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 	if (!bHit) return false;

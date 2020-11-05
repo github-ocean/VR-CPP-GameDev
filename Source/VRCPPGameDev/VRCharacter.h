@@ -11,6 +11,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "TimerManager.h"
 #include "NavigationSystem.h"
+#include "MotionControllerComponent.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -35,8 +36,14 @@ public:
 
 private:
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	class UCameraComponent* Camera;
+
+	UPROPERTY()
+	class UMotionControllerComponent* LeftController;
+
+	UPROPERTY()
+	class UMotionControllerComponent* RightController;
 
 	UPROPERTY(VisibleAnywhere)
 	class USceneComponent* VRRoot;
