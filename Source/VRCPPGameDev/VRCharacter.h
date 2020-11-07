@@ -8,6 +8,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PostProcessComponent.h"
+#include "Components/SplineComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
@@ -50,6 +51,9 @@ private:
 	class USceneComponent* VRRoot;
 
 	UPROPERTY(VisibleAnywhere)
+	class USplineComponent* TeleportPath;
+
+	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* DestinationMarker;
 
 	UPROPERTY(EditAnywhere)
@@ -70,13 +74,13 @@ private:
 	UPROPERTY()
 	class UPostProcessComponent* PostProcessComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	class UMaterialInterface* BlinkerMaterialBase;
 
 	UPROPERTY()
 	class UMaterialInstanceDynamic* BlinkerMaterialInstance;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	class UCurveFloat* RadiusVsVelocity;
 
 public:
@@ -84,10 +88,13 @@ public:
 	void MoveForward(float Throttle);
 	void MoveRight(float Throttle);
 
-	bool FindTeleportDestination(FVector& OutLocation);
+	bool FindTeleportDestination(TArray<FVector> &OutPath, FVector& OutLocation);
 	void UpdateDestinationMarker();
-	void UpdateBlinker();
+
 	FVector2D GetBlinkerCenter();
+	void UpdateBlinker();
+
+	void UpdateSpline(const TArray<FVector>& Path);
 
 	void BegineTeleport();
 	void FinishTeleport();
