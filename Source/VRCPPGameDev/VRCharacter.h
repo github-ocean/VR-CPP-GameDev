@@ -9,6 +9,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "NavigationSystem.h"
 #include "MotionControllerComponent.h"
@@ -52,7 +53,13 @@ private:
 	class UStaticMeshComponent* DestinationMarker;
 
 	UPROPERTY(EditAnywhere)
-	float MaxTeleportDistance = 1000;
+	float TeleportProjectileRadius = 10;
+
+	UPROPERTY(EditAnywhere)
+	float TeleportProjectileSpeed = 800;
+
+	UPROPERTY(EditAnywhere)
+		float TeleportSimulationTime = 1;
 
 	UPROPERTY(EditAnywhere)
 	float TeleportFadeTime = 1;
