@@ -83,6 +83,15 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UCurveFloat* RadiusVsVelocity;
 
+	UPROPERTY()
+	TArray<class UStaticMeshComponent*> TeleportPathMeshPool;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMesh* TeleportArchMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInterface* TeleportArchMaterial;
+
 public:
 
 	void MoveForward(float Throttle);
@@ -94,7 +103,8 @@ public:
 	FVector2D GetBlinkerCenter();
 	void UpdateBlinker();
 
-	void UpdateSpline(const TArray<FVector>& Path);
+	void DrawTeleportPath(const TArray<FVector> &Path);
+	void UpdateSpline(const TArray<FVector> &Path);
 
 	void BegineTeleport();
 	void FinishTeleport();

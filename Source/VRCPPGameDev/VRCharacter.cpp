@@ -32,6 +32,7 @@ AVRCharacter::AVRCharacter()
 
 	TeleportPath = CreateDefaultSubobject<USplineComponent>(TEXT("TeleportPath"));
 	TeleportPath->SetupAttachment(RightController);
+
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +47,7 @@ void AVRCharacter::BeginPlay()
 		BlinkerMaterialInstance = UMaterialInstanceDynamic::Create(BlinkerMaterialBase, this);
 		PostProcessComponent->AddOrUpdateBlendable(BlinkerMaterialInstance);
 	}
+
 }
 
 // Called every frame
@@ -110,7 +112,7 @@ void AVRCharacter::UpdateDestinationMarker()
 		DestinationMarker->SetVisibility(true);
 		DestinationMarker->SetWorldLocation(Location);
 		
-		UpdateSpline(Path);
+		DrawTeleportPath(Path);
 	}
 	else
 	{
@@ -118,17 +120,25 @@ void AVRCharacter::UpdateDestinationMarker()
 	}
 }
 
-void AVRCharacter::UpdateBlinker()
+void AVRCharacter::DrawTeleportPath(const TArray<FVector> &Path)
 {
-	if (RadiusVsVelocity == nullptr) return;
+	UpdateSpline(Path);
 
-	float Speed = GetVelocity().Size();
-	float Radius = RadiusVsVelocity->GetFloatValue(Speed);
-	
-	BlinkerMaterialInstance->SetScalarParameterValue(TEXT("Radius"), Radius);
+	for (int32 i = 0; i < Path.Num(); ++i)
+	{
+		if (TeleportPathMeshPool.Num() <= i)
+		{
+			UStaticMeshComponent* DynamicMesh = NewObject<UStaticMeshComponent>(this);
+			DynamicMesh->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			DynamicMesh->SetStaticMesh(TeleportArchMesh);
+			DynamicMesh->SetMaterial(0, TeleportArchMaterial);
+			DynamicMesh->RegisterComponent();
+			TeleportPathMeshPool.Add(DynamicMesh);
+		}
 
-	FVector2D Center = GetBlinkerCenter();
-	BlinkerMaterialInstance->SetVectorParameterValue(TEXT("Center"), FLinearColor(Center.X, Center.Y, 0));
+		UStaticMeshComponent* DynamicMesh = TeleportPathMeshPool[i];
+		DynamicMesh->SetWorldLocation(Path[i]);
+	}
 }
 
 void AVRCharacter::UpdateSpline(const TArray<FVector>& Path)
@@ -178,6 +188,19 @@ FVector2D AVRCharacter::GetBlinkerCenter()
 	ScreenStationaryLocation.Y /= SizeY;
 
 	return ScreenStationaryLocation;
+}
+
+void AVRCharacter::UpdateBlinker()
+{
+	if (RadiusVsVelocity == nullptr) return;
+
+	float Speed = GetVelocity().Size();
+	float Radius = RadiusVsVelocity->GetFloatValue(Speed);
+
+	BlinkerMaterialInstance->SetScalarParameterValue(TEXT("Radius"), Radius);
+
+	FVector2D Center = GetBlinkerCenter();
+	BlinkerMaterialInstance->SetVectorParameterValue(TEXT("Center"), FLinearColor(Center.X, Center.Y, 0));
 }
 
 // Called to bind functionality to input
