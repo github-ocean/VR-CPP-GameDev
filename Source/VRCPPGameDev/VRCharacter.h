@@ -9,6 +9,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/SplineComponent.h"
+#include "Components/SplineMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
@@ -84,7 +86,7 @@ private:
 	class UCurveFloat* RadiusVsVelocity;
 
 	UPROPERTY()
-	TArray<class UStaticMeshComponent*> TeleportPathMeshPool;
+	TArray<class USplineMeshComponent*> TeleportPathMeshPool;
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMesh* TeleportArchMesh;
